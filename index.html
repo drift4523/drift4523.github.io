@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MarcoPolo</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden !important;
+      position: relative;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f0f4f8;
+      color: #0f172a;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 20px 14px;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #151646;
+      padding: 8px 20px;
+      border-radius: 30px;
+      border: 1px solid #151646;
+      box-shadow: 0 4px 12px rgba(21, 22, 70, 0.18);
+    }
+    .header-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    .title {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: #f0f4f8;
+    }
+
+    .svg-container {
+      position: relative;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 8px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+    }
+    .svg-container svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 100%;
+    }
+    
+    .svg-container circle:not(.flash-active-desk) {
+      fill: #cbd5e1;
+      opacity: 0.35;
+    }
+
+    .desk-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 900;
+      color: #151646;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 0 0 3px rgba(21, 22, 70, 0.15);
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+      z-index: 10;
+      border: 2px solid #151646;
+    }
+    .desk-overlay.no-data {
+      width: auto;
+      height: auto;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      padding: 8px 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .flash-active-desk {
+      fill: #000000 !important;
+      opacity: 1 !important;
+      animation: pulse-navy 1.2s infinite ease-in-out !important;
+    }
+
+    @keyframes pulse-navy {
+      0%   { fill: #000000 !important; opacity: 1 !important; stroke: #000000; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.4)); transform-box: fill-box; transform-origin: center; transform: scale(1); }
+      50%  { fill: #151646 !important; opacity: 1 !important; stroke: #151646; stroke-width: 1.5px; filter: drop-shadow(0 0 10px #151646); transform-box: fill-box; transform-origin: center; transform: scale(1.85); }
+      100% { fill: #000000 !important; opacity: 1 !important; stroke: #000000; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.4)); transform-box: fill-box; transform-origin: center; transform: scale(1); }
+    }
+
+    .upcoming {
+      text-align: left;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+      margin-top: 16px;
+    }
+    .upcoming h4 {
+      margin: 0 0 10px 0;
+      color: #0f172a;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    
+    .upcoming ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+    }
+    .upcoming li {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .upcoming li.no-data-item {
+      grid-column: span 4;
+      color: #64748b;
+      font-size: 12px;
+      background: none;
+      border: none;
+      padding: 6px 0;
+    }
+    .upcoming .date {
+      font-size: 10px;
+      color: #475569;
+      font-weight: 600;
+      line-height: 1.1;
+      word-break: break-word;
+    }
+    .upcoming .desk {
+      font-size: 14px;
+      color: #151646;
+      font-weight: 800;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">
+      <div class="brand-pill">
+        <img src="mp_logo200.png" alt="MarcoPolo Logo" class="header-logo" />
+        <span class="title">MarcoPolo</span>
+      </div>
+    </div>
+    
+    <div id="svg-wrapper" class="svg-container">
+      <div id="desk-display" class="desk-overlay">--</div>
+      <svg
+         viewBox="0 0 139.37801 128.74596"
+         version="1.1"
+         id="svg1"
+         xmlns="http://www.w3.org/2000/svg">
+        <g id="layer1" transform="translate(-21.236467,-113.36947)">
+          <g id="g10" transform="translate(0,-0.74732785)">
+            <g id="g9">
+              <g id="g5" transform="translate(8.9107403,0.19916053)">
+                <g id="g3-2" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66">
+                    <circle id="desk-27" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-26" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-25" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12" transform="translate(0.05921841)">
+                    <circle id="desk-28" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-29" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-30" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g5-7" transform="translate(3.1855411,22.225214)">
+                <g id="g3-2-1" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-0">
+                    <circle id="desk-21" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-20" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-19" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-9" transform="translate(0.05921841)">
+                    <circle id="desk-22" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-23" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-24" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-0" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g7" transform="translate(-1.1645772,44.251019)">
+                <g id="g3-2-4" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-8">
+                    <circle id="desk-15" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-14" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-13" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-2" transform="translate(0.05921841)">
+                    <circle id="desk-16" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-17" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-18" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g6" transform="translate(1.7009071,44.100072)">
+                <g id="g3-1" transform="translate(2.9522,-110.64275)">
+                  <g id="g4">
+                    <circle id="desk-31" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <g id="g1-1" transform="translate(0.05921841)">
+                      <circle id="desk-32" cx="38.089039" cy="186.40642" r="2.208178" />
+                    </g>
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-4" width="8.5699263" height="17.678194" x="36.677345" y="70.485733" />
+              </g>
+              <g id="g5-0" transform="translate(3.1855411,66.276823)">
+                <g id="g3-2-8" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-80">
+                    <circle id="desk-9" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-8" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-7" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-98" transform="translate(0.05921841)">
+                    <circle id="desk-10" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-11" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-12" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g5-07" transform="translate(8.9107403,88.302877)">
+                <g id="g3-2-81" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-5">
+                    <circle id="desk-3" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-2" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-1" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-4" transform="translate(0.05921841)">
+                    <circle id="desk-4" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-5" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-6" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-26" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+            </g>
+          </g>
+          <g id="g10-1" transform="matrix(-1,0,0,1,181.85095,-0.74732785)">
+            <g id="g9-6">
+              <g id="g5-3" transform="translate(8.9107403,0.19916053)">
+                <g id="g3-2-3" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-55">
+                    <circle id="desk-38" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-39" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-40" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-25" transform="translate(0.05921841)">
+                    <circle id="desk-37" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-36" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-35" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g5-7-2" transform="translate(3.1855411,22.225214)">
+                <g id="g3-2-1-1" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-0-4">
+                    <circle id="desk-44" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-45" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-46" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-9-1" transform="translate(0.05921841)">
+                    <circle id="desk-43" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-42" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-41" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-0-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g7-4" transform="translate(-1.1645772,44.251019)">
+                <g id="g3-2-4-9" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-8-2">
+                    <circle id="desk-50" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-51" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-52" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-2-4" transform="translate(0.05921841)">
+                    <circle id="desk-49" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-48" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-47" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g6-3" transform="translate(1.7009071,44.100072)">
+                <g id="g3-1-4" transform="translate(2.9522,-110.64275)">
+                  <g id="g4-8">
+                    <circle id="desk-34" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <g id="g1-1-7" transform="translate(0.05921841)">
+                      <circle id="desk-33" cx="38.089039" cy="186.40642" r="2.208178" />
+                    </g>
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-4-8" width="8.5699263" height="17.678194" x="36.677345" y="70.485733" />
+              </g>
+              <g id="g5-0-1" transform="translate(3.1855411,66.276823)">
+                <g id="g3-2-8-2" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-80-5">
+                    <circle id="desk-56" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-57" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-58" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-98-4" transform="translate(0.05921841)">
+                    <circle id="desk-55" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-54" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-53" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2-9" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+              <g id="g5-07-3" transform="translate(8.9107403,88.302877)">
+                <g id="g3-2-81-0" transform="translate(0.36672211,-44.844968)">
+                  <g id="g2-66-5-7">
+                    <circle id="desk-62" cx="27.786245" cy="194.22771" r="2.208178" />
+                    <circle id="desk-63" cx="38.148254" cy="194.22771" r="2.208178" />
+                    <circle id="desk-64" cx="48.510262" cy="194.22771" r="2.208178" />
+                  </g>
+                  <g id="g1-12-4-3" transform="translate(0.05921841)">
+                    <circle id="desk-61" cx="27.727028" cy="186.40642" r="2.208178" />
+                    <circle id="desk-60" cx="38.089039" cy="186.40642" r="2.208178" />
+                    <circle id="desk-59" cx="48.451042" cy="186.40642" r="2.208178" />
+                  </g>
+                </g>
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-26-2" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="upcoming">
+      <h4>Upcoming Bookings</h4>
+      <ul id="upcoming-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    function formatDesk(k) {
+      if (!k) return "";
+      return k.replace(/^(2nd\s+floor|floor\s+2|2nd\s+fl)\s*-\s*/i, "").trim();
+    }
+
+    if (window.location.hash && window.location.hash.length > 1) {
+      try {
+        const hash = window.location.hash.substring(1);
+        let bookings = [];
+
+        if (hash.includes(':')) {
+          bookings = hash.split(',').map(pair => {
+            const [rawDate, desk] = pair.split(':');
+            if (rawDate && desk) {
+              const d = `${rawDate.slice(0,4)}-${rawDate.slice(4,6)}-${rawDate.slice(6,8)}`;
+              return { d, k: desk.trim(), c: 0 };
+            }
+          }).filter(Boolean);
+        } else {
+          const jsonString = decodeURIComponent(escape(atob(hash)));
+          bookings = JSON.parse(jsonString);
+        }
+
+        if (bookings.length > 0) {
+          localStorage.setItem("gdst_desk_schedule", JSON.stringify(bookings));
+        }
+        history.replaceState(null, null, window.location.pathname);
+      } catch (err) {
+        console.error("Error parsing schedule payload:", err);
+      }
+    }
+
+    function renderSchedule() {
+      const displayEl = document.getElementById("desk-display");
+      const listEl = document.getElementById("upcoming-list");
+      
+      const stored = localStorage.getItem("gdst_desk_schedule");
+      if (!stored) {
+        displayEl.innerText = "No Schedule Synced";
+        displayEl.className = "desk-overlay no-data";
+        listEl.innerHTML = "<li class='no-data-item'>Scan extension QR code to sync.</li>";
+        return;
+      }
+
+      const bookings = JSON.parse(stored);
+      
+      const now = new Date();
+      const todayStr = now.getFullYear() + '-' + 
+                      String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                      String(now.getDate()).padStart(2, '0');
+
+      const todayBooking = bookings.find(b => b.d === todayStr && !b.c);
+      const futureBookings = bookings.filter(b => b.d > todayStr && !b.c);
+
+      if (todayBooking) {
+        displayEl.innerText = formatDesk(todayBooking.k);
+        displayEl.className = "desk-overlay";
+        highlightDeskOnSVG(todayBooking.k);
+      } else {
+        displayEl.innerText = "No Desk Booked Today";
+        displayEl.className = "desk-overlay no-data";
+      }
+
+      listEl.innerHTML = "";
+      if (futureBookings.length === 0) {
+        listEl.innerHTML = "<li class='no-data-item'>No future bookings.</li>";
+      } else {
+        futureBookings.forEach(b => {
+          const li = document.createElement("li");
+          const [year, month, day] = b.d.split("-");
+          const dateObj = new Date(year, month - 1, day);
+          const formattedDate = dateObj.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+          
+          li.innerHTML = `
+            <span class="date">${formattedDate}</span>
+            <span class="desk">${formatDesk(b.k)}</span>
+          `;
+          listEl.appendChild(li);
+        });
+      }
+    }
+
+    function highlightDeskOnSVG(deskNumber) {
+      const cleanDeskNumber = formatDesk(deskNumber);
+      const targetElement = document.getElementById(`desk-${cleanDeskNumber}`);
+
+      if (targetElement) {
+        targetElement.classList.add("flash-active-desk");
+      }
+    }
+
+    renderSchedule();
+  </script>
+</body>
+</html>
