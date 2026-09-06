@@ -14,36 +14,38 @@
       width: 100%;
       max-width: 100vw;
       overflow-x: hidden !important;
-      position: relative;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #f0f4f8;
       color: #0f172a;
-      padding: 20px 0;
+      padding: 12px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
+      justify-content: flex-start;
+      min-height: 100dvh;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .card {
       background: #ffffff;
       border-radius: 20px;
-      padding: 20px 14px;
+      padding: 16px 14px;
       width: 90%;
       max-width: 360px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
       text-align: center;
       overflow: hidden;
       border: 1px solid #e2e8f0;
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
     
     .header {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .brand-pill {
       display: inline-flex;
@@ -54,16 +56,22 @@
       border-radius: 30px;
       border: 1px solid #151646;
       box-shadow: 0 4px 12px rgba(21, 22, 70, 0.18);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .brand-pill:active {
+      transform: scale(0.97);
     }
     .header-logo {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       object-fit: contain;
     }
     .title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.4px;
       color: #f0f4f8;
     }
 
@@ -75,40 +83,96 @@
       padding: 8px;
       border: 1px solid #e2e8f0;
       overflow: hidden;
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
     .svg-container svg {
       width: 100%;
       height: auto;
       display: block;
       max-width: 100%;
+      overflow: visible !important;
+    }
+    .svg-container svg g {
+      overflow: visible !important;
     }
     
-    .svg-container circle:not(.flash-active-desk) {
-      fill: #cbd5e1;
-      opacity: 0.35;
+    .svg-container rect {
+      fill: none !important;
+      stroke: #000000 !important;
+      stroke-width: 0.938px !important;
+      opacity: 0.86 !important;
+      transition: stroke 0.3s ease;
     }
 
-    .desk-overlay {
+    .svg-container circle:not(.flash-active-desk):not(.flash-future-desk):not(.sys-target-a):not([class*="sys-node-"]) {
+      fill: #cbd5e1;
+      opacity: 0.35;
+      cursor: pointer;
+      transition: fill 0.2s ease, transform 0.2s ease;
+    }
+
+    .desk-overlay-wrapper {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 68px;
-      height: 68px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .today-date-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #151646;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 3px 10px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(21, 22, 70, 0.18);
+      backdrop-filter: blur(4px);
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      display: none;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .desk-overlay {
+      position: relative;
+      width: 66px;
+      height: 66px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 900;
       color: #151646;
-      background: rgba(255, 255, 255, 0.94);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 0 0 3px rgba(21, 22, 70, 0.15);
+      background: radial-gradient(circle, #ffffff 55%, #e8faf7 100%);
+      box-shadow: 0 8px 22px rgba(21, 22, 70, 0.15), 0 0 0 3px rgba(97, 226, 208, 0.65);
       backdrop-filter: blur(6px);
-      pointer-events: none;
-      z-index: 10;
       border: 2px solid #151646;
+      transition: background 0.3s ease, color 0.3s ease;
     }
+
+    .desk-overlay::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 2px solid #61e2d0;
+      animation: badge-sonar-wave 2s infinite ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes badge-sonar-wave {
+      0%   { transform: scale(0.85); opacity: 0.9; }
+      100% { transform: scale(1.35); opacity: 0; }
+    }
+
     .desk-overlay.no-data {
       width: auto;
       height: auto;
@@ -117,35 +181,147 @@
       font-weight: 600;
       color: #64748b;
       padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 4px 12px rgba(0,0,0,0.06);
       border: 1px solid #e2e8f0;
     }
-
-    .flash-active-desk {
-      fill: #000000 !important;
-      opacity: 1 !important;
-      animation: pulse-navy 1.2s infinite ease-in-out !important;
+    .desk-overlay.no-data::before {
+      display: none !important;
     }
 
-    @keyframes pulse-navy {
-      0%   { fill: #000000 !important; opacity: 1 !important; stroke: #000000; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.4)); transform-box: fill-box; transform-origin: center; transform: scale(1); }
-      50%  { fill: #151646 !important; opacity: 1 !important; stroke: #151646; stroke-width: 1.5px; filter: drop-shadow(0 0 10px #151646); transform-box: fill-box; transform-origin: center; transform: scale(1.85); }
-      100% { fill: #000000 !important; opacity: 1 !important; stroke: #000000; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.4)); transform-box: fill-box; transform-origin: center; transform: scale(1); }
+    /* RADAR EFFECTS */
+    .svg-container circle.flash-active-desk {
+      fill: #151646;
+      opacity: 1;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .svg-container circle.flash-active-desk.radar-original {
+      animation: anim-original 1.3s infinite ease-in-out;
+    }
+    @keyframes anim-original {
+      0%   { fill: #151646; stroke: #151646; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(21, 22, 70, 0.5)); transform: scale(1); }
+      50%  { fill: #61e2d0; stroke: #151646; stroke-width: 1.8px; filter: drop-shadow(0 0 12px #61e2d0); transform: scale(1.75); }
+      100% { fill: #151646; stroke: #151646; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(21, 22, 70, 0.5)); transform: scale(1); }
+    }
+
+    .svg-container circle.flash-active-desk.radar-sonar {
+      animation: anim-sonar 1.4s infinite ease-out;
+    }
+    @keyframes anim-sonar {
+      0% { fill: #151646; stroke: #61e2d0; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(21, 22, 70, 0.6)); transform: scale(1); }
+      50% { fill: #61e2d0; stroke: #151646; stroke-width: 2.5px; filter: drop-shadow(0 0 14px #61e2d0); transform: scale(2.2); opacity: 0.85; }
+      100% { fill: #151646; stroke: #61e2d0; stroke-width: 0.5px; filter: drop-shadow(0 0 2px rgba(21, 22, 70, 0.2)); transform: scale(1); opacity: 1; }
+    }
+
+    .svg-container circle.flash-active-desk.radar-sweep {
+      stroke-dasharray: 2.5 1.5;
+      animation: anim-sweep 1.8s infinite linear;
+    }
+    @keyframes anim-sweep {
+      0% { fill: #151646; stroke: #61e2d0; stroke-width: 1.5px; filter: drop-shadow(0 0 4px #61e2d0); transform: scale(1.4) rotate(0deg); }
+      50% { fill: #61e2d0; stroke: #151646; stroke-width: 2px; filter: drop-shadow(0 0 10px #61e2d0); transform: scale(1.75) rotate(180deg); }
+      100% { fill: #151646; stroke: #61e2d0; stroke-width: 1.5px; filter: drop-shadow(0 0 4px #61e2d0); transform: scale(1.4) rotate(360deg); }
+    }
+
+    .svg-container circle.flash-active-desk.radar-ping {
+      animation: anim-ping 1.6s infinite ease-in-out;
+    }
+    @keyframes anim-ping {
+      0% { fill: #151646; stroke: #151646; stroke-width: 1px; transform: scale(1); }
+      15% { fill: #61e2d0; stroke: #151646; stroke-width: 2px; filter: drop-shadow(0 0 10px #61e2d0); transform: scale(1.8); }
+      28% { fill: #151646; stroke: #151646; stroke-width: 1px; transform: scale(1.2); }
+      42% { fill: #61e2d0; stroke: #61e2d0; stroke-width: 2.5px; filter: drop-shadow(0 0 14px #61e2d0); transform: scale(2.1); }
+      60%, 100% { fill: #151646; stroke: #151646; stroke-width: 1px; transform: scale(1); }
+    }
+
+    .svg-container circle.flash-active-desk.radar-halo {
+      animation: anim-halo 1.5s infinite ease-in-out;
+    }
+    @keyframes anim-halo {
+      0% { fill: #151646; stroke: #61e2d0; stroke-width: 1px; filter: drop-shadow(0 0 3px #61e2d0); transform: scale(1.1); }
+      50% { fill: #151646; stroke: #61e2d0; stroke-width: 2.2px; filter: drop-shadow(0 0 8px #61e2d0) drop-shadow(0 0 16px #61e2d0); transform: scale(1.65); }
+      100% { fill: #151646; stroke: #61e2d0; stroke-width: 1px; filter: drop-shadow(0 0 3px #61e2d0); transform: scale(1.1); }
+    }
+
+    .svg-container circle.flash-future-desk {
+      fill: #61e2d0 !important;
+      opacity: 1 !important;
+      animation: pulse-lightblue 1s ease-in-out infinite !important;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    @keyframes pulse-lightblue {
+      0%   { fill: #151646; opacity: 1; stroke: #61e2d0; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.3)); transform: scale(1); }
+      50%  { fill: #61e2d0; opacity: 1; stroke: #151646; stroke-width: 1.2px; filter: drop-shadow(0 0 6px #61e2d0); transform: scale(1.35); }
+      100% { fill: #151646; opacity: 1; stroke: #61e2d0; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.3)); transform: scale(1); }
+    }
+
+    /* INTERNAL GAME / DIAGNOSTIC STYLES */
+    .svg-container circle.sys-target-a {
+      fill: #ff0055 !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 8px #ff0055) !important;
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(1.8) !important;
+    }
+
+    .svg-container circle.sys-node-0 {
+      fill: #22c55e !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 10px #22c55e) !important;
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(2) !important;
+    }
+    .svg-container circle.sys-node-1 {
+      fill: #ef4444 !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 10px #ef4444) !important;
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(2) !important;
+    }
+    .svg-container circle.sys-node-2 {
+      fill: #eab308 !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 10px #eab308) !important;
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(2) !important;
+    }
+    .svg-container circle.sys-node-3 {
+      fill: #3b82f6 !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 10px #3b82f6) !important;
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(2) !important;
     }
 
     .upcoming {
-      text-align: left;
+      text-align: center;
       border-top: 1px solid #e2e8f0;
-      padding-top: 14px;
-      margin-top: 16px;
+      padding-top: 12px;
+      margin-top: 12px;
+      transition: border-color 0.3s ease;
     }
-    .upcoming h4 {
-      margin: 0 0 10px 0;
-      color: #0f172a;
-      font-size: 11px;
+    
+    .upcoming-pill, .menu-pill {
+      display: inline-block;
+      background: #151646;
+      color: #f0f4f8;
+      font-size: 10.5px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.6px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 6px rgba(21, 22, 70, 0.12);
     }
     
     .upcoming ul {
@@ -154,14 +330,16 @@
       margin: 0;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
+      gap: 8px;
       width: 100%;
     }
+
     .upcoming li {
+      position: relative;
       background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 8px 2px;
+      border: 1px solid #cbd5e1;
+      border-radius: 50%;
+      aspect-ratio: 1 / 1;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -169,7 +347,37 @@
       text-align: center;
       min-width: 0;
       overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     }
+    .upcoming li:hover {
+      background: #ffffff;
+      border-color: #151646;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(21, 22, 70, 0.12);
+    }
+    .upcoming li:active {
+      transform: scale(0.94);
+    }
+
+    .upcoming li.radar-active::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid #61e2d0;
+      background: rgba(97, 226, 208, 0.35);
+      animation: li-radar-wave-center 1s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes li-radar-wave-center {
+      0%   { transform: scale(0); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+
     .upcoming li.no-data-item {
       grid-column: span 4;
       color: #64748b;
@@ -177,19 +385,151 @@
       background: none;
       border: none;
       padding: 6px 0;
+      aspect-ratio: auto;
+      border-radius: 0;
+      cursor: default;
+      box-shadow: none;
     }
     .upcoming .date {
-      font-size: 10px;
+      font-size: 9.5px;
       color: #475569;
       font-weight: 600;
       line-height: 1.1;
       word-break: break-word;
     }
     .upcoming .desk {
-      font-size: 14px;
+      font-size: 13px;
       color: #151646;
       font-weight: 800;
-      margin-top: 3px;
+      margin-top: 2px;
+    }
+
+    /* Secret Control Bar */
+    .radar-toggle-bar {
+      display: none;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #cbd5e1;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    
+    .toggle-buttons {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .radar-btn {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .radar-btn:hover {
+      background: #e2e8f0;
+    }
+    .radar-btn.active {
+      background: #151646;
+      color: #ffffff;
+      border-color: #151646;
+      box-shadow: 0 2px 6px rgba(21, 22, 70, 0.2);
+    }
+
+    .sys-status-line {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #61e2d0;
+      margin-top: 2px;
+      min-height: 14px;
+    }
+
+    /* TACTICAL DARK MODE STYLES */
+    body.dark-mode {
+      background: #090d16;
+      color: #f1f5f9;
+    }
+    body.dark-mode .card {
+      background: #0f172a;
+      border-color: #1e293b;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    body.dark-mode .svg-container {
+      background: #090d16;
+      border-color: #1e293b;
+    }
+    body.dark-mode .svg-container rect {
+      stroke: #334155 !important;
+    }
+    body.dark-mode .svg-container circle:not(.flash-active-desk):not(.flash-future-desk):not(.sys-target-a):not([class*="sys-node-"]) {
+      fill: #1e293b;
+      opacity: 0.5;
+    }
+    body.dark-mode .today-date-badge {
+      background: rgba(15, 23, 42, 0.95);
+      color: #61e2d0;
+      border-color: #334155;
+    }
+    body.dark-mode .desk-overlay {
+      background: radial-gradient(circle, #0f172a 55%, #082f2c 100%);
+      color: #61e2d0;
+      border-color: #61e2d0;
+    }
+    body.dark-mode .upcoming {
+      border-color: #1e293b;
+    }
+    body.dark-mode .upcoming li {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    body.dark-mode .upcoming li:hover {
+      background: #334155;
+      border-color: #61e2d0;
+    }
+    body.dark-mode .upcoming .date {
+      color: #94a3b8;
+    }
+    body.dark-mode .upcoming .desk {
+      color: #61e2d0;
+    }
+    body.dark-mode .radar-toggle-bar {
+      border-color: #334155;
+    }
+    body.dark-mode .radar-btn {
+      background: #1e293b;
+      color: #94a3b8;
+      border-color: #334155;
+    }
+    body.dark-mode .radar-btn.active {
+      background: #61e2d0;
+      color: #0f172a;
+      border-color: #61e2d0;
+    }
+
+    /* PARTY MODE STYLES */
+    body.party-mode .svg-container circle:not(.flash-active-desk):not(.flash-future-desk):not(.sys-target-a):not([class*="sys-node-"]) {
+      animation: party-rainbow 2s infinite linear !important;
+      opacity: 0.9 !important;
+    }
+
+    @keyframes party-rainbow {
+      0%   { fill: #ff0055; }
+      20%  { fill: #ffea00; }
+      40%  { fill: #76ff03; }
+      60%  { fill: #00e5ff; }
+      80%  { fill: #d500f9; }
+      100% { fill: #ff0055; }
     }
   </style>
 </head>
@@ -197,14 +537,18 @@
 
   <div class="card">
     <div class="header">
-      <div class="brand-pill">
+      <div class="brand-pill" id="brand-pill" title="Double click to toggle menu">
         <img src="mp_logo200.png" alt="MarcoPolo Logo" class="header-logo" />
         <span class="title">MarcoPolo</span>
       </div>
     </div>
     
     <div id="svg-wrapper" class="svg-container">
-      <div id="desk-display" class="desk-overlay">--</div>
+      <div class="desk-overlay-wrapper">
+        <div id="today-date-display" class="today-date-badge"></div>
+        <div id="desk-display" class="desk-overlay">--</div>
+      </div>
+
       <svg
          viewBox="0 0 139.37801 128.74596"
          version="1.1"
@@ -214,6 +558,7 @@
           <g id="g10" transform="translate(0,-0.74732785)">
             <g id="g9">
               <g id="g5" transform="translate(8.9107403,0.19916053)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66">
                     <circle id="desk-27" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -226,9 +571,9 @@
                     <circle id="desk-30" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g5-7" transform="translate(3.1855411,22.225214)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-0" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-1" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-0">
                     <circle id="desk-21" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -241,9 +586,9 @@
                     <circle id="desk-24" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-0" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g7" transform="translate(-1.1645772,44.251019)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-4" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-8">
                     <circle id="desk-15" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -256,9 +601,9 @@
                     <circle id="desk-18" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g6" transform="translate(1.7009071,44.100072)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-4" width="8.5699263" height="17.678194" x="36.677345" y="70.485733" />
                 <g id="g3-1" transform="translate(2.9522,-110.64275)">
                   <g id="g4">
                     <circle id="desk-31" cx="38.148254" cy="194.22771" r="2.208178" />
@@ -267,9 +612,9 @@
                     </g>
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-4" width="8.5699263" height="17.678194" x="36.677345" y="70.485733" />
               </g>
               <g id="g5-0" transform="translate(3.1855411,66.276823)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-8" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-80">
                     <circle id="desk-9" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -282,9 +627,9 @@
                     <circle id="desk-12" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g5-07" transform="translate(8.9107403,88.302877)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-26" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-81" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-5">
                     <circle id="desk-3" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -297,13 +642,13 @@
                     <circle id="desk-6" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-26" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
             </g>
           </g>
           <g id="g10-1" transform="matrix(-1,0,0,1,181.85095,-0.74732785)">
             <g id="g9-6">
               <g id="g5-3" transform="translate(8.9107403,0.19916053)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-3" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-55">
                     <circle id="desk-38" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -316,9 +661,9 @@
                     <circle id="desk-35" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g5-7-2" transform="translate(3.1855411,22.225214)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-0-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-1-1" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-0-4">
                     <circle id="desk-44" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -331,9 +676,9 @@
                     <circle id="desk-41" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-0-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g7-4" transform="translate(-1.1645772,44.251019)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-4-9" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-8-2">
                     <circle id="desk-50" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -346,9 +691,9 @@
                     <circle id="desk-47" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g6-3" transform="translate(1.7009071,44.100072)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-4-8" width="8.5699263" height="17.678194" x="36.677345" y="70.485733" />
                 <g id="g3-1-4" transform="translate(2.9522,-110.64275)">
                   <g id="g4-8">
                     <circle id="desk-34" cx="38.148254" cy="194.22771" r="2.208178" />
@@ -357,9 +702,9 @@
                     </g>
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-4-8" width="8.5699263" height="17.678194" x="36.677345" y="70.485733" />
               </g>
               <g id="g5-0-1" transform="translate(3.1855411,66.276823)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2-9" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-8-2" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-80-5">
                     <circle id="desk-56" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -372,9 +717,9 @@
                     <circle id="desk-53" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2-9" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
               <g id="g5-07-3" transform="translate(8.9107403,88.302877)">
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-26-2" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-81-0" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-5-7">
                     <circle id="desk-62" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -387,7 +732,6 @@
                     <circle id="desk-59" cx="48.451042" cy="186.40642" r="2.208178" />
                   </g>
                 </g>
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-26-2" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
               </g>
             </g>
           </g>
@@ -396,15 +740,370 @@
     </div>
 
     <div class="upcoming">
-      <h4>Upcoming Bookings</h4>
+      <span class="upcoming-pill">Upcoming Bookings</span>
       <ul id="upcoming-list"></ul>
+    </div>
+
+    <!-- Diagnostics Control Bar -->
+    <div id="radar-toggle-bar" class="radar-toggle-bar">
+      <span class="menu-pill">Menu</span>
+      
+      <div id="streak-badge" style="font-size: 10.5px; font-weight: 800; color: #61e2d0; margin-bottom: 2px;">
+        Status: Checking...
+      </div>
+      <div id="game-status-display" class="sys-status-line"></div>
+
+      <!-- Radar Pulse Styles -->
+      <div class="toggle-buttons">
+        <button class="radar-btn" data-style="radar-original" onclick="switchRadarStyle('radar-original', this)">Original</button>
+        <button class="radar-btn" data-style="radar-sonar" onclick="switchRadarStyle('radar-sonar', this)">Sonar</button>
+        <button class="radar-btn" data-style="radar-sweep" onclick="switchRadarStyle('radar-sweep', this)">Sweep</button>
+        <button class="radar-btn" data-style="radar-ping" onclick="switchRadarStyle('radar-ping', this)">Ping</button>
+        <button class="radar-btn" data-style="radar-halo" onclick="switchRadarStyle('radar-halo', this)">Halo</button>
+      </div>
+
+      <!-- Synchronized Patterns -->
+      <div class="toggle-buttons" style="margin-top: 4px;">
+        <button class="radar-btn" onclick="triggerStadiumWave()">🌊 Stadium Wave</button>
+      </div>
+
+      <!-- Games -->
+      <div class="toggle-buttons" style="margin-top: 4px;">
+        <button class="radar-btn" onclick="_execTestAlpha()">🎯 Whack-a-Desk</button>
+        <button class="radar-btn" onclick="_execTestBeta()">🧠 Desk Simon</button>
+      </div>
+
+      <!-- App Toggles -->
+      <div class="toggle-buttons" style="margin-top: 4px;">
+        <button class="radar-btn" id="dark-mode-btn" onclick="toggleDarkMode();">🌙 Dark Mode</button>
+        <button class="radar-btn" onclick="togglePartyMode();">🪩 Party Mode</button>
+      </div>
     </div>
   </div>
 
   <script>
+    const activeFutureTimers = {};
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    
+    let currentRadarStyle = localStorage.getItem("marcopolo_radar_style") || "radar-original";
+    let todayBookedDeskNum = null;
+
+    // Diagnostic State
+    let _dTimer = null;
+    let _dScore = 0;
+    let _dCurrentNode = null;
+
+    let _dSeq = [];
+    let _dStep = 0;
+    let _isSeqRunning = false;
+
     function formatDesk(k) {
       if (!k) return "";
       return k.replace(/^(2nd\s+floor|floor\s+2|2nd\s+fl)\s*-\s*/i, "").trim();
+    }
+
+    function bringDeskToFront(targetElement) {
+      if (!targetElement) return;
+
+      if (targetElement.parentNode) {
+        targetElement.parentNode.appendChild(targetElement);
+      }
+
+      const podGroup = targetElement.closest('g[id^="g5"], g[id^="g7"], g[id^="g6"]');
+      if (podGroup && podGroup.parentNode) {
+        podGroup.parentNode.appendChild(podGroup);
+      }
+    }
+
+    function updateActiveButtonUI() {
+      document.querySelectorAll('.radar-btn').forEach(btn => {
+        if (btn.dataset.style === currentRadarStyle) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      const darkBtn = document.getElementById('dark-mode-btn');
+      if (darkBtn) {
+        const isDark = document.body.classList.contains('dark-mode');
+        darkBtn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+      }
+    }
+
+    function switchRadarStyle(styleName, btnEl) {
+      currentRadarStyle = styleName;
+      localStorage.setItem("marcopolo_radar_style", styleName);
+      updateActiveButtonUI();
+
+      const activeDesk = document.querySelector('.flash-active-desk');
+      if (activeDesk) {
+        activeDesk.classList.remove('radar-original', 'radar-sonar', 'radar-sweep', 'radar-ping', 'radar-halo');
+        activeDesk.classList.add(currentRadarStyle);
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('marcopolo_dark_mode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+      updateActiveButtonUI();
+    }
+
+    function togglePartyMode() {
+      document.body.classList.toggle('party-mode');
+      localStorage.setItem('marcopolo_party_mode', document.body.classList.contains('party-mode') ? 'enabled' : 'disabled');
+    }
+
+    function _resetDiags() {
+      clearInterval(_dTimer);
+      _isSeqRunning = false;
+
+      document.querySelectorAll('.svg-container circle').forEach(c => {
+        c.classList.remove('sys-target-a', 'sys-node-0', 'sys-node-1', 'sys-node-2', 'sys-node-3');
+      });
+    }
+
+    // Double Click listener on Title Pill
+    document.getElementById("brand-pill").addEventListener("dblclick", () => {
+      const toggleBar = document.getElementById("radar-toggle-bar");
+      if (toggleBar.style.display === "none" || !toggleBar.style.display) {
+        toggleBar.style.display = "flex";
+      } else {
+        toggleBar.style.display = "none";
+      }
+    });
+
+    /* ========================================================
+       FLOORPLAN PATTERNS
+       ======================================================== */
+    function triggerStadiumWave() {
+      _resetDiags();
+      const statusEl = document.getElementById("game-status-display");
+      if (statusEl) statusEl.innerText = "🌊 Stadium Wave Running...";
+
+      const circles = Array.from(document.querySelectorAll('.svg-container circle[id^="desk-"]'));
+      circles.sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
+
+      circles.forEach((c, idx) => {
+        setTimeout(() => {
+          c.classList.add('flash-future-desk');
+          setTimeout(() => c.classList.remove('flash-future-desk'), 400);
+        }, idx * 25);
+      });
+
+      setTimeout(() => {
+        if (statusEl) statusEl.innerText = "";
+      }, circles.length * 25 + 500);
+    }
+
+    function getRandomValidDeskId(excludeArray = []) {
+      let randNum;
+      let attempts = 0;
+      do {
+        randNum = Math.floor(Math.random() * 64) + 1;
+        attempts++;
+      } while (
+        (String(randNum) === String(todayBookedDeskNum) || excludeArray.includes(String(randNum))) &&
+        attempts < 200
+      );
+      return randNum;
+    }
+
+    /* ========================================================
+       WHACK-A-DESK (OBFUSCATED INTERNAL NAMES)
+       ======================================================== */
+    function _execTestAlpha() {
+      _resetDiags();
+      _dScore = 0;
+      let timeLeft = 15;
+      const statusEl = document.getElementById("game-status-display");
+      const hiScore = localStorage.getItem("mp_sys_metric_a") || 0;
+
+      if (statusEl) statusEl.innerText = `🎯 Whack-a-Desk | Time: ${timeLeft}s | Score: 0 (Hi: ${hiScore})`;
+
+      function spawnTarget() {
+        if (_dCurrentNode) {
+          const prevEl = document.getElementById(`desk-${_dCurrentNode}`);
+          if (prevEl) prevEl.classList.remove('sys-target-a');
+        }
+
+        _dCurrentNode = getRandomValidDeskId();
+        const targetEl = document.getElementById(`desk-${_dCurrentNode}`);
+        if (targetEl) {
+          bringDeskToFront(targetEl);
+          targetEl.classList.add('sys-target-a');
+        }
+      }
+
+      spawnTarget();
+
+      _dTimer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+          clearInterval(_dTimer);
+          if (_dCurrentNode) {
+            const prevEl = document.getElementById(`desk-${_dCurrentNode}`);
+            if (prevEl) prevEl.classList.remove('sys-target-a');
+          }
+          
+          if (_dScore > hiScore) {
+            localStorage.setItem("mp_sys_metric_a", _dScore);
+          }
+          if (statusEl) statusEl.innerText = `🎉 Time's Up! Final Score: ${_dScore} (Hi: ${Math.max(_dScore, hiScore)})`;
+        } else {
+          if (statusEl) statusEl.innerText = `🎯 Whack-a-Desk | Time: ${timeLeft}s | Score: ${_dScore} (Hi: ${hiScore})`;
+          spawnTarget();
+        }
+      }, 900);
+    }
+
+    /* ========================================================
+       DESK SIMON (OBFUSCATED INTERNAL NAMES)
+       ======================================================== */
+    function _execTestBeta() {
+      _resetDiags();
+      _dSeq = [];
+      _dStep = 0;
+      _isSeqRunning = true;
+      nextBetaRound();
+    }
+
+    function flashNode(deskId, callback) {
+      const deskEl = document.getElementById(`desk-${deskId}`);
+      if (!deskEl) return;
+
+      const colorClass = `sys-node-${parseInt(deskId, 10) % 4}`;
+      bringDeskToFront(deskEl);
+      deskEl.classList.add(colorClass);
+
+      setTimeout(() => {
+        deskEl.classList.remove(colorClass);
+        if (callback) callback();
+      }, 400);
+    }
+
+    function nextBetaRound() {
+      const statusEl = document.getElementById("game-status-display");
+      const hiScore = localStorage.getItem("mp_sys_metric_b") || 0;
+      
+      _dSeq.push(getRandomValidDeskId());
+      _dStep = 0;
+
+      if (statusEl) statusEl.innerText = `🧠 Simon Round ${_dSeq.length} | Watch Pattern... (Hi: ${hiScore})`;
+
+      let idx = 0;
+      const playInterval = setInterval(() => {
+        const deskId = _dSeq[idx];
+        flashNode(deskId);
+
+        idx++;
+        if (idx >= _dSeq.length) {
+          clearInterval(playInterval);
+          setTimeout(() => {
+            if (statusEl) statusEl.innerText = `🧠 Your Turn! Repeat ${_dSeq.length} node(s)...`;
+          }, 500);
+        }
+      }, 700);
+    }
+
+    // Universal Floorplan Desk Tap Handler
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target && target.tagName === 'circle' && target.id && target.id.startsWith('desk-')) {
+        const tappedDeskNum = target.id.replace('desk-', '');
+
+        if (target.classList.contains('sys-target-a')) {
+          _dScore++;
+          target.classList.remove('sys-target-a');
+          const statusEl = document.getElementById("game-status-display");
+          const hiScore = localStorage.getItem("mp_sys_metric_a") || 0;
+          if (statusEl) statusEl.innerText = `🎯 Whack-a-Desk | Score: ${_dScore} (Hi: ${hiScore})`;
+        }
+
+        if (_isSeqRunning && _dSeq.length > 0) {
+          const expectedDesk = _dSeq[_dStep];
+          
+          if (String(tappedDeskNum) === String(expectedDesk)) {
+            flashNode(tappedDeskNum);
+            _dStep++;
+
+            if (_dStep >= _dSeq.length) {
+              const hiScore = localStorage.getItem("mp_sys_metric_b") || 0;
+              if (_dSeq.length > hiScore) {
+                localStorage.setItem("mp_sys_metric_b", _dSeq.length);
+              }
+              const statusEl = document.getElementById("game-status-display");
+              if (statusEl) statusEl.innerText = `✨ Round ${_dSeq.length} Cleared!`;
+              setTimeout(nextBetaRound, 1000);
+            }
+          } else {
+            _isSeqRunning = false;
+            const hiScore = localStorage.getItem("mp_sys_metric_b") || 0;
+            const finalLevel = _dSeq.length - 1;
+            const statusEl = document.getElementById("game-status-display");
+            if (statusEl) statusEl.innerText = `❌ Game Over! Reached Level ${finalLevel} (Hi: ${Math.max(finalLevel, hiScore)})`;
+          }
+        }
+      }
+    });
+
+    /* ========================================================
+       METRICS & HISTORY TRACKING
+       ======================================================== */
+    function recordLifetimeBookings(newBookings) {
+      const historyRaw = localStorage.getItem("mp_telemetry_log") || "{}";
+      let history = {};
+      try { history = JSON.parse(historyRaw); } catch (e) { history = {}; }
+
+      newBookings.forEach(b => {
+        if (b.d && b.k) {
+          history[b.d] = formatDesk(b.k);
+        }
+      });
+
+      localStorage.setItem("mp_telemetry_log", JSON.stringify(history));
+    }
+
+    function calculateStreak() {
+      const historyRaw = localStorage.getItem("mp_telemetry_log") || "{}";
+      let history = {};
+      try { history = JSON.parse(historyRaw); } catch(e) {}
+
+      const sortedDates = Object.keys(history).sort();
+      if (sortedDates.length === 0) {
+        return { rank: "Floor Explorer 🗺️", desk: "-", streak: 0 };
+      }
+
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+      const validDates = sortedDates.filter(d => d <= todayStr);
+      if (validDates.length === 0) {
+        const firstDate = sortedDates[0];
+        return { rank: "Floor Explorer 🗺️", desk: history[firstDate], streak: 1 };
+      }
+
+      const lastDate = validDates[validDates.length - 1];
+      const activeDesk = history[lastDate];
+
+      let streak = 0;
+      for (let i = validDates.length - 1; i >= 0; i--) {
+        const dateKey = validDates[i];
+        if (history[dateKey] === activeDesk) {
+          streak++;
+        } else {
+          break; // Streak breaks only when a booked office day was at a different desk
+        }
+      }
+
+      let rank = "Floor Explorer 🗺️";
+      if (streak >= 15) rank = "Desk Landlord 🏰";
+      else if (streak >= 8) rank = "Desk Loyalist 🛡️";
+      else if (streak >= 3) rank = "Regular Resident ☕";
+      else if (streak >= 2) rank = "Rookie Nomad 🧭";
+
+      return { rank, desk: activeDesk, streak };
     }
 
     if (window.location.hash && window.location.hash.length > 1) {
@@ -427,6 +1126,7 @@
 
         if (bookings.length > 0) {
           localStorage.setItem("gdst_desk_schedule", JSON.stringify(bookings));
+          recordLifetimeBookings(bookings);
         }
         history.replaceState(null, null, window.location.pathname);
       } catch (err) {
@@ -434,14 +1134,58 @@
       }
     }
 
+    function triggerFutureDeskPulse(deskNumber) {
+      const cleanDeskNumber = formatDesk(deskNumber);
+      const targetElement = document.getElementById(`desk-${cleanDeskNumber}`);
+
+      if (!targetElement) return;
+
+      if (targetElement.classList.contains("flash-active-desk")) {
+        return;
+      }
+
+      if (activeFutureTimers[cleanDeskNumber]) {
+        clearTimeout(activeFutureTimers[cleanDeskNumber]);
+      }
+
+      bringDeskToFront(targetElement);
+      targetElement.classList.add("flash-future-desk");
+
+      activeFutureTimers[cleanDeskNumber] = setTimeout(() => {
+        targetElement.classList.remove("flash-future-desk");
+        delete activeFutureTimers[cleanDeskNumber];
+      }, 2000);
+    }
+
     function renderSchedule() {
       const displayEl = document.getElementById("desk-display");
+      const dateBadgeEl = document.getElementById("today-date-display");
       const listEl = document.getElementById("upcoming-list");
       
+      if (localStorage.getItem('marcopolo_dark_mode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+      }
+      if (localStorage.getItem('marcopolo_party_mode') === 'enabled') {
+        document.body.classList.add('party-mode');
+      }
+
+      updateActiveButtonUI();
+
+      const streakInfo = calculateStreak();
+      const streakBadgeEl = document.getElementById("streak-badge");
+      if (streakBadgeEl) {
+        if (streakInfo.streak > 0) {
+          streakBadgeEl.innerText = `${streakInfo.rank} (Desk ${streakInfo.desk} • ${streakInfo.streak} Streak)`;
+        } else {
+          streakBadgeEl.innerText = "Status: Floor Explorer 🗺️";
+        }
+      }
+
       const stored = localStorage.getItem("gdst_desk_schedule");
       if (!stored) {
         displayEl.innerText = "No Schedule Synced";
         displayEl.className = "desk-overlay no-data";
+        if (dateBadgeEl) dateBadgeEl.style.display = "none";
         listEl.innerHTML = "<li class='no-data-item'>Scan extension QR code to sync.</li>";
         return;
       }
@@ -457,12 +1201,27 @@
       const futureBookings = bookings.filter(b => b.d > todayStr && !b.c);
 
       if (todayBooking) {
-        displayEl.innerText = formatDesk(todayBooking.k);
+        todayBookedDeskNum = formatDesk(todayBooking.k);
+        displayEl.innerText = todayBookedDeskNum;
         displayEl.className = "desk-overlay";
+
+        const [year, month, day] = todayBooking.d.split("-");
+        const dateObj = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+        const dayName = dayNames[dateObj.getDay()];
+        const dayNum = dateObj.getDate();
+        const monthName = monthNames[dateObj.getMonth()];
+
+        if (dateBadgeEl) {
+          dateBadgeEl.innerText = `${dayName} ${dayNum} ${monthName}`;
+          dateBadgeEl.style.display = "block";
+        }
+
         highlightDeskOnSVG(todayBooking.k);
       } else {
+        todayBookedDeskNum = null;
         displayEl.innerText = "No Desk Booked Today";
         displayEl.className = "desk-overlay no-data";
+        if (dateBadgeEl) dateBadgeEl.style.display = "none";
       }
 
       listEl.innerHTML = "";
@@ -472,13 +1231,28 @@
         futureBookings.forEach(b => {
           const li = document.createElement("li");
           const [year, month, day] = b.d.split("-");
-          const dateObj = new Date(year, month - 1, day);
-          const formattedDate = dateObj.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+          const dateObj = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+          const dayName = dayNames[dateObj.getDay()];
+          const dayNum = dateObj.getDate();
+          const monthName = monthNames[dateObj.getMonth()];
           
           li.innerHTML = `
-            <span class="date">${formattedDate}</span>
+            <span class="date">${dayName} ${dayNum} ${monthName}</span>
             <span class="desk">${formatDesk(b.k)}</span>
           `;
+
+          li.addEventListener("click", () => {
+            triggerFutureDeskPulse(b.k);
+
+            li.classList.remove("radar-active");
+            void li.offsetWidth;
+            li.classList.add("radar-active");
+
+            setTimeout(() => {
+              li.classList.remove("radar-active");
+            }, 1000);
+          });
+
           listEl.appendChild(li);
         });
       }
@@ -489,7 +1263,8 @@
       const targetElement = document.getElementById(`desk-${cleanDeskNumber}`);
 
       if (targetElement) {
-        targetElement.classList.add("flash-active-desk");
+        bringDeskToFront(targetElement);
+        targetElement.classList.add("flash-active-desk", currentRadarStyle);
       }
     }
 
