@@ -259,7 +259,7 @@
       100% { fill: #151646; opacity: 1; stroke: #61e2d0; stroke-width: 1px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.3)); transform: scale(1); }
     }
 
-    /* INTERNAL GAME / DIAGNOSTIC STYLES */
+    /* INTERNAL GAME STYLES */
     .svg-container circle.sys-target-a {
       fill: #ff0055 !important;
       opacity: 1 !important;
@@ -404,7 +404,7 @@
       margin-top: 2px;
     }
 
-    /* Secret Control Bar */
+    /* Diagnostics Control Bar */
     .radar-toggle-bar {
       display: none;
       margin-top: 14px;
@@ -517,7 +517,7 @@
       border-color: #61e2d0;
     }
 
-    /* PARTY MODE STYLES */
+    /* DEMO GLOW STYLES */
     body.party-mode .svg-container circle:not(.flash-active-desk):not(.flash-future-desk):not(.sys-target-a):not([class*="sys-node-"]) {
       animation: party-rainbow 2s infinite linear !important;
       opacity: 0.9 !important;
@@ -680,7 +680,7 @@
               <g id="g7-4" transform="translate(-1.1645772,44.251019)">
                 <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-3-6" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-4-9" transform="translate(0.36672211,-44.844968)">
-                  <g id="g2-66-8-2">
+                  <g id="g2-66-8">
                     <circle id="desk-50" cx="27.786245" cy="194.22771" r="2.208178" />
                     <circle id="desk-51" cx="38.148254" cy="194.22771" r="2.208178" />
                     <circle id="desk-52" cx="48.510262" cy="194.22771" r="2.208178" />
@@ -704,7 +704,7 @@
                 </g>
               </g>
               <g id="g5-0-1" transform="translate(3.1855411,66.276823)">
-                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2-9" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
+                <rect style="opacity:0.86;fill:none;stroke:#000000;stroke-width:0.938;" id="rect4-2" width="31.289862" height="17.237097" x="22.870045" y="136.85355" />
                 <g id="g3-2-8-2" transform="translate(0.36672211,-44.844968)">
                   <g id="g2-66-80-5">
                     <circle id="desk-56" cx="27.786245" cy="194.22771" r="2.208178" />
@@ -744,7 +744,6 @@
       <ul id="upcoming-list"></ul>
     </div>
 
-    <!-- Diagnostics Control Bar -->
     <div id="radar-toggle-bar" class="radar-toggle-bar">
       <span class="menu-pill">Menu</span>
       
@@ -753,7 +752,6 @@
       </div>
       <div id="game-status-display" class="sys-status-line"></div>
 
-      <!-- Radar Pulse Styles -->
       <div class="toggle-buttons">
         <button class="radar-btn" data-style="radar-original" onclick="switchRadarStyle('radar-original', this)">Original</button>
         <button class="radar-btn" data-style="radar-sonar" onclick="switchRadarStyle('radar-sonar', this)">Sonar</button>
@@ -762,21 +760,18 @@
         <button class="radar-btn" data-style="radar-halo" onclick="switchRadarStyle('radar-halo', this)">Halo</button>
       </div>
 
-      <!-- Synchronized Patterns -->
       <div class="toggle-buttons" style="margin-top: 4px;">
         <button class="radar-btn" onclick="triggerStadiumWave()">🌊 Stadium Wave</button>
       </div>
 
-      <!-- Games -->
       <div class="toggle-buttons" style="margin-top: 4px;">
         <button class="radar-btn" onclick="_execTestAlpha()">🎯 Whack-a-Desk</button>
-        <button class="radar-btn" onclick="_execTestBeta()">🧠 Desk Simon</button>
+        <button class="radar-btn" onclick="_execTestBeta()">🧠 Floor 2 Simon</button>
       </div>
 
-      <!-- App Toggles -->
       <div class="toggle-buttons" style="margin-top: 4px;">
         <button class="radar-btn" id="dark-mode-btn" onclick="toggleDarkMode();">🌙 Dark Mode</button>
-        <button class="radar-btn" onclick="togglePartyMode();">🪩 Party Mode</button>
+        <button class="radar-btn" onclick="togglePartyMode();">🪩 Demo Glow</button>
       </div>
     </div>
   </div>
@@ -789,7 +784,7 @@
     let currentRadarStyle = localStorage.getItem("marcopolo_radar_style") || "radar-original";
     let todayBookedDeskNum = null;
 
-    // Diagnostic State
+    // Diagnostic / Game State
     let _dTimer = null;
     let _dScore = 0;
     let _dCurrentNode = null;
@@ -910,9 +905,6 @@
       return randNum;
     }
 
-    /* ========================================================
-       WHACK-A-DESK (OBFUSCATED INTERNAL NAMES)
-       ======================================================== */
     function _execTestAlpha() {
       _resetDiags();
       _dScore = 0;
@@ -958,9 +950,6 @@
       }, 900);
     }
 
-    /* ========================================================
-       DESK SIMON (OBFUSCATED INTERNAL NAMES)
-       ======================================================== */
     function _execTestBeta() {
       _resetDiags();
       _dSeq = [];
@@ -981,6 +970,30 @@
         deskEl.classList.remove(colorClass);
         if (callback) callback();
       }, 400);
+    }
+
+    function flashErrorX(deskId) {
+      const deskEl = document.getElementById(`desk-${deskId}`);
+      if (!deskEl) return;
+      bringDeskToFront(deskEl);
+
+      const cx = parseFloat(deskEl.getAttribute("cx"));
+      const cy = parseFloat(deskEl.getAttribute("cy"));
+
+      const xText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      xText.setAttribute("x", cx);
+      xText.setAttribute("y", cy);
+      xText.setAttribute("font-size", "10px");
+      xText.setAttribute("text-anchor", "middle");
+      xText.setAttribute("dominant-baseline", "central");
+      xText.setAttribute("pointer-events", "none");
+      xText.textContent = "❌";
+
+      deskEl.parentNode.appendChild(xText);
+
+      setTimeout(() => {
+        if (xText.parentNode) xText.parentNode.removeChild(xText);
+      }, 1200);
     }
 
     function nextBetaRound() {
@@ -1039,6 +1052,7 @@
             }
           } else {
             _isSeqRunning = false;
+            flashErrorX(tappedDeskNum);
             const hiScore = localStorage.getItem("mp_sys_metric_b") || 0;
             const finalLevel = _dSeq.length - 1;
             const statusEl = document.getElementById("game-status-display");
